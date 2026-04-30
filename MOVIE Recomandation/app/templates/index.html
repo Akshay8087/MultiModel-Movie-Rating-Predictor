@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CinePredict Pro — Advanced Movie ML Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#07070e;--s1:#0e0e1a;--s2:#13131f;--s3:#18182a;
+  --border:#22223a;--border2:#2e2e4a;
+  --accent:#ff5e2c;--accent2:#ffbe0b;--teal:#56cfb2;--blue:#5b8dd9;
+  --purple:#c084fc;--pink:#f472b6;
+  --avg:#5b8dd9;--good:#56cfb2;--exc:#ff5e2c;
+  --text:#f0f0f8;--muted:#5a5a78;--mid:#9090a8;
+  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r24:24px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 80% 10%,rgba(255,94,44,.04) 0%,transparent 70%),
+             radial-gradient(ellipse 50% 30% at 10% 90%,rgba(86,207,178,.03) 0%,transparent 70%)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* HEADER */
+.header{position:relative;padding:48px 48px 36px;background:linear-gradient(180deg,var(--s1) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--accent) 40%,var(--accent2) 60%,transparent 100%)}
+.header-inner{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,92px);letter-spacing:4px;line-height:.9;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 55%,var(--teal) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--muted);margin-top:8px;font-weight:500}
+.header-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.htag{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px;font-size:11px;color:var(--mid)}
+.dot-live{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;
+  animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(34,197,94,0)}}
+.hstats{display:flex;gap:16px;flex-wrap:wrap}
+.hstat{background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);padding:14px 20px;text-align:center;min-width:88px}
+.hstat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);line-height:1}
+.hstat-lbl{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:3px}
+
+/* NAV */
+.nav{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--s1);
+  position:sticky;top:0;z-index:100;padding:0 48px;overflow-x:auto}
+.nav-tab{padding:14px 22px;font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:600;
+  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;user-select:none}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* PAGES */
+.page{display:none;padding:36px 48px;max-width:1500px;margin:0 auto;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+@media(max-width:860px){.grid3{grid-template-columns:1fr 1fr}}
+
+/* PANELS */
+.panel{background:var(--s2);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;position:relative}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),var(--teal));opacity:0;transition:opacity .3s}
+.panel:hover::before{opacity:1}
+.ph{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.ph-icon{width:36px;height:36px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ph-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px}
+.ph-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.pb{padding:24px}
+
+/* FORM */
+.field{margin-bottom:18px}
+.field-lbl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:9px;font-weight:600}
+.sel-wrap{position:relative}
+select{width:100%;background:var(--s3);border:1px solid var(--border);border-radius:var(--r8);
+  padding:11px 36px 11px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;
+  outline:none;cursor:pointer;transition:border .2s;appearance:none}
+select:focus{border-color:var(--accent)}
+.sel-wrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:var(--muted);pointer-events:none;font-size:12px}
+.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* SLIDERS */
+.slg{margin-bottom:16px}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border2);
+  border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--accent);cursor:pointer;box-shadow:0 0 10px rgba(255,94,44,.4);
+  border:2px solid rgba(255,255,255,.15);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.sl-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.sl-mm{font-size:10px;color:var(--muted)}
+.sl-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent2);
+  background:var(--s3);padding:2px 8px;border-radius:var(--r4);border:1px solid var(--border)}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:22px}
+.btn{flex:1;padding:13px;border:none;border-radius:var(--r8);font-family:'Bebas Neue',sans-serif;
+  font-size:16px;letter-spacing:2px;cursor:pointer;transition:all .2s}
+.btn-p{background:linear-gradient(135deg,var(--accent),#c83800);color:#fff;
+  box-shadow:0 4px 18px rgba(255,94,44,.25)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,94,44,.4)}
+.btn-s{background:var(--s3);border:1px solid var(--border2);color:var(--mid)}
+.btn-s:hover{border-color:var(--accent2);color:var(--accent2)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none !important}
+
+/* RESULT */
+.result-wrap{display:none}
+.pred-hero{text-align:center;padding:28px;background:var(--s3);border-radius:var(--r12);
+  margin-bottom:20px;position:relative;overflow:hidden}
+.pred-hero::before{content:'';position:absolute;inset:0;opacity:.06;
+  background:radial-gradient(ellipse at center,var(--pc,#fff) 0%,transparent 70%)}
+.pred-tier{font-family:'Bebas Neue',sans-serif;font-size:76px;letter-spacing:6px;line-height:1}
+.pred-model-lbl{font-size:11px;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-top:6px}
+.pred-conf-val{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;margin-top:8px}
+.conf-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;
+  font-size:11px;font-weight:600;letter-spacing:.5px;margin-top:8px}
+.cb-high{background:rgba(86,207,178,.15);color:var(--teal);border:1px solid rgba(86,207,178,.3)}
+.cb-mid{background:rgba(255,190,11,.15);color:var(--accent2);border:1px solid rgba(255,190,11,.3)}
+.cb-low{background:rgba(255,94,44,.15);color:var(--accent);border:1px solid rgba(255,94,44,.3)}
+.prob-bars{display:flex;flex-direction:column;gap:11px;margin-top:20px}
+.pb-row{display:flex;align-items:center;gap:10px}
+.pb-lbl{width:80px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);flex-shrink:0}
+.pb-track{flex:1;background:var(--border);border-radius:3px;height:8px;overflow:hidden}
+.pb-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.22,.61,.36,1)}
+.pb-fill.Average{background:var(--avg)}.pb-fill.Good{background:var(--good)}.pb-fill.Excellent{background:var(--exc)}
+.pb-pct{width:44px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mid);text-align:right}
+.res-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.res-stat{background:var(--s3);border:1px solid var(--border);border-radius:var(--r8);
+  padding:10px 14px;text-align:center;min-width:88px}
+.rs-val{font-family:'Bebas Neue',monospace;font-size:22px;color:var(--accent2);line-height:1}
+.rs-lbl{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:3px}
+
+/* COMPARE TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:2px;
+  color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;font-weight:600}
+td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;transition:background .15s}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.rank-cell{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted)}
+.rank-gold{color:#e6a817}
+.type-badge{font-size:10px;padding:3px 8px;border-radius:var(--r4);font-weight:600;
+  letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.t-Baseline{background:rgba(91,141,217,.15);color:var(--blue)}
+.t-Boosting{background:rgba(255,94,44,.15);color:var(--accent)}
+.t-Tuned{background:rgba(255,190,11,.15);color:var(--accent2)}
+.t-Ensemble{background:rgba(86,207,178,.15);color:var(--teal)}
+.pred-sm{font-size:11px;padding:4px 10px;border-radius:var(--r4);font-weight:600}
+.p-Average{background:rgba(91,141,217,.15);color:var(--avg)}
+.p-Good{background:rgba(86,207,178,.15);color:var(--good)}
+.p-Excellent{background:rgba(255,94,44,.15);color:var(--exc)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.conf-bar{display:inline-block;width:60px;height:5px;background:var(--border);border-radius:3px;
+  vertical-align:middle;overflow:hidden;margin-right:6px}
+.conf-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--accent2));border-radius:3px}
+
+/* LEADERBOARD */
+.ldr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:14px}
+.ldr-card{background:var(--s3);border:1px solid var(--border);border-radius:var(--r12);
+  padding:18px;position:relative;overflow:hidden;transition:all .25s}
+.ldr-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.ldr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.ldr-1::before{background:linear-gradient(90deg,#e6a817,var(--accent2))}
+.ldr-2::before{background:linear-gradient(90deg,#9da4b0,#c0c8d8)}
+.ldr-3::before{background:linear-gradient(90deg,#a06040,#c08060)}
+.ldr-n::before{background:var(--border2)}
+.ldr-rank{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--muted);line-height:1}
+.ldr-rank-gold{color:#e6a817}
+.ldr-name{font-size:12px;font-weight:600;color:var(--text);margin:6px 0 10px;line-height:1.3}
+.ldr-acc{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--accent);line-height:1}
+.ldr-label{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--muted)}
+.ldr-pills{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.ldr-pill{font-size:9px;font-family:'JetBrains Mono',monospace;background:var(--s2);
+  border:1px solid var(--border);border-radius:3px;padding:2px 6px;color:var(--mid)}
+
+/* VIZ GALLERY */
+.viz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
+.viz-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r12);
+  overflow:hidden;cursor:pointer;transition:all .25s}
+.viz-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.viz-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--s3);min-height:160px}
+.viz-info{padding:12px 16px}
+.viz-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.viz-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);
+  z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--s2);border:1px solid var(--border2);border-radius:var(--r16);
+  max-width:92vw;max-height:92vh;overflow:auto;padding:24px;position:relative}
+.modal-close{position:absolute;top:12px;right:16px;font-size:22px;color:var(--muted);
+  cursor:pointer;background:none;border:none;line-height:1;transition:color .2s}
+.modal-close:hover{color:var(--text)}
+.modal-title{font-size:13px;color:var(--muted);margin-bottom:14px}
+.modal-img{max-width:100%;border-radius:var(--r8);display:block}
+
+/* PIPELINE */
+.steps{display:flex;flex-direction:column}
+.step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--border2);
+  flex-shrink:0;width:42px;line-height:1}
+.step-body h4{font-size:13px;font-weight:600;margin-bottom:5px}
+.step-body p{font-size:12px;color:var(--muted);line-height:1.65}
+.step-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.stag{font-size:10px;font-family:'JetBrains Mono',monospace;background:var(--s3);
+  border:1px solid var(--border);border-radius:3px;padding:2px 7px;color:var(--accent2)}
+
+/* MISC */
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;
+  margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.spinner{display:none;width:22px;height:22px;border:2px solid var(--border2);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin:14px auto 0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-st{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-st .ei{font-size:40px;margin-bottom:12px}
+.empty-st p{font-size:13px}
+.api-table td,.api-table th{padding:9px 12px;font-size:12px}
+.api-table th{color:var(--muted);border-bottom:1px solid var(--border);text-align:left}
+.api-table td{border-bottom:1px solid var(--border);color:var(--mid)}
+.api-table tr:last-child td{border-bottom:none}
+.tag-chip{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--border);
+  border-radius:20px;padding:4px 10px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--mid)}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ════════════════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="logo">CinePredict</div>
+      <div class="logo-sub">Advanced Movie Intelligence · Multi-Model ML Platform</div>
+      <div class="header-tags">
+        <div class="htag"><span class="dot-live"></span>14 Models Live</div>
+        <div class="htag">🎬 10,000 Movies</div>
+        <div class="htag">⚡ Optuna Bayesian Tuning</div>
+        <div class="htag">🏆 XGBoost · LightGBM · RF · SVM · Ensemble</div>
+      </div>
+    </div>
+    <div class="hstats">
+      <div class="hstat"><div class="hstat-val">14</div><div class="hstat-lbl">Models</div></div>
+      <div class="hstat"><div class="hstat-val">10K</div><div class="hstat-lbl">Movies</div></div>
+      <div class="hstat"><div class="hstat-val">9</div><div class="hstat-lbl">Features</div></div>
+      <div class="hstat"><div class="hstat-val" id="best-acc">—</div><div class="hstat-lbl">Best Acc</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-tab active" onclick="gotoPage('predict',this)">⚡ Predict</div>
+  <div class="nav-tab" onclick="gotoPage('compare',this)">⊞ Compare All</div>
+  <div class="nav-tab" onclick="gotoPage('leaderboard',this)">🏆 Leaderboard</div>
+  <div class="nav-tab" onclick="gotoPage('gallery',this)">📊 Visualizations</div>
+  <div class="nav-tab" onclick="gotoPage('pipeline',this)">🔬 Pipeline</div>
+</nav>
+
+<!-- ══ PAGE: PREDICT ══════════════════════════════════════════════════ -->
+<div class="page active" id="page-predict">
+<div class="grid2">
+
+  <!-- Input Panel -->
+  <div class="panel">
+    <div class="ph"><div class="ph-icon" style="background:#1e0e08">🎬</div>
+      <div><div class="ph-title">Movie Features</div><div class="ph-sub">Configure attributes and run prediction</div></div></div>
+    <div class="pb">
+      <div class="field"><div class="field-lbl">ML Model</div>
+        <div class="sel-wrap"><select id="model-sel">
+          {% for m in models %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+        </select></div></div>
+
+      <div class="form-grid2">
+        <div class="field"><div class="field-lbl">Language</div>
+          <div class="sel-wrap"><select id="lang_enc">
+            <option value="0">English (en)</option><option value="1">French (fr)</option>
+            <option value="2">Italian (it)</option><option value="3">Japanese (ja)</option>
+            <option value="4">Spanish (es)</option><option value="5">Other</option>
+          </select></div></div>
+        <div class="field"><div class="field-lbl">Is English?</div>
+          <div class="sel-wrap"><select id="is_en">
+            <option value="1">Yes</option><option value="0">No</option>
+          </select></div></div>
+      </div>
+
+      <div class="slg"><div class="field-lbl">Popularity</div>
+        <input type="range" id="sl_pop" min="0" max="100" value="15" step="0.5" oninput="sv('vl_pop',this.value)"/>
+        <div class="sl-row"><span class="sl-mm">0</span><span class="sl-val" id="vl_pop">15</span><span class="sl-mm">100</span></div></div>
+
+      <div class="slg"><div class="field-lbl">Vote Count</div>
+        <input type="range" id="sl_vc" min="300" max="40000" value="8000" step="100" oninput="sv('vl_vc',this.value)"/>
+        <div class="sl-row"><span class="sl-mm">300</span><span class="sl-val" id="vl_vc">8000</span><span class="sl-mm">40K</span></div></div>
+
+      <div class="slg"><div class="field-lbl">Release Year</div>
+        <input type="range" id="sl_yr" min="1920" max="2024" value="2010" step="1" oninput="sv('vl_yr',this.value)"/>
+        <div class="sl-row"><span class="sl-mm">1920</span><span class="sl-val" id="vl_yr">2010</span><span class="sl-mm">2024</span></div></div>
+
+      <div class="slg"><div class="field-lbl">Overview Length (chars)</div>
+        <input type="range" id="sl_ov" min="50" max="900" value="280" step="10" oninput="sv('vl_ov',this.value)"/>
+        <div class="sl-row"><span class="sl-mm">50</span><span class="sl-val" id="vl_ov">280</span><span class="sl-mm">900</span></div></div>
+
+      <div class="slg"><div class="field-lbl">Word Count</div>
+        <input type="range" id="sl_wc" min="5" max="150" value="50" step="1" oninput="sv('vl_wc',this.value)"/>
+        <div class="sl-row"><span class="sl-mm">5</span><span class="sl-val" id="vl_wc">50</span><span class="sl-mm">150</span></div></div>
+
+      <div class="btn-row">
+        <button class="btn btn-p" id="btn-pred" onclick="runPredict()">⚡ PREDICT</button>
+        <button class="btn btn-s" onclick="gotoPage('compare',document.querySelectorAll('.nav-tab')[1]);runCompare()">⊞ ALL MODELS</button>
+      </div>
+      <div class="spinner" id="sp-pred"></div>
+    </div>
+  </div>
+
+  <!-- Result Panel -->
+  <div>
+    <div class="panel result-wrap" id="result-panel">
+      <div class="ph"><div class="ph-icon" style="background:#1a1008">🏆</div>
+        <div><div class="ph-title">Prediction Result</div><div class="ph-sub" id="res-model-sub">—</div></div></div>
+      <div class="pb">
+        <div class="pred-hero" id="pred-hero">
+          <div class="pred-tier" id="pred-tier">—</div>
+          <div class="pred-model-lbl" id="pred-model-lbl">—</div>
+          <div class="pred-conf-val" id="pred-conf-val">—</div>
+          <div id="pred-conf-badge"></div>
+        </div>
+        <div class="prob-bars" id="prob-bars"></div>
+        <div class="res-stats" id="res-stats"></div>
+      </div>
+    </div>
+    <div class="panel" id="empty-result" style="display:flex;align-items:center;justify-content:center;min-height:320px">
+      <div class="empty-st"><div class="ei">🎯</div><p>Set movie parameters and<br/>click <strong>Predict</strong> to see the result</p></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══ PAGE: COMPARE ══════════════════════════════════════════════════ -->
+<div class="page" id="page-compare">
+  <div class="panel">
+    <div class="ph"><div class="ph-icon" style="background:#0e1520">⊞</div>
+      <div><div class="ph-title">All-Model Comparison</div><div class="ph-sub">Same input — all 14 models ranked by test accuracy</div></div></div>
+    <div class="pb">
+      <div class="btn-row" style="max-width:260px">
+        <button class="btn btn-p" onclick="runCompare()">⚡ RUN COMPARISON</button>
+      </div>
+      <div class="spinner" id="sp-compare"></div>
+      <div id="cmp-empty" class="empty-st" style="margin-top:24px"><div class="ei">⊞</div><p>Click Run Comparison to rank all models on the current input</p></div>
+      <div id="cmp-result" style="display:none;margin-top:24px">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Model</th><th>Type</th><th>Prediction</th>
+              <th>Confidence</th><th>Accuracy</th><th>F1</th><th>MCC</th>
+            </tr></thead>
+            <tbody id="cmp-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: LEADERBOARD ══════════════════════════════════════════════ -->
+<div class="page" id="page-leaderboard">
+  <div class="sec-title">Model Leaderboard — 14 Models Ranked</div>
+  <div class="ldr-grid" id="ldr-grid"></div>
+</div>
+
+<!-- ══ PAGE: VIZ GALLERY ══════════════════════════════════════════════ -->
+<div class="page" id="page-gallery">
+  <div class="sec-title">Visualization Gallery — 13 Research Plots</div>
+  <div class="viz-grid" id="viz-grid"></div>
+</div>
+
+<!-- ══ PAGE: PIPELINE ══════════════════════════════════════════════════ -->
+<div class="page" id="page-pipeline">
+<div class="grid2">
+
+  <div class="panel">
+    <div class="ph"><div class="ph-icon" style="background:#0a1a10">🔬</div>
+      <div><div class="ph-title">ML Pipeline — 9 Steps</div></div></div>
+    <div class="pb">
+      <div class="steps">
+        <div class="step"><div class="step-num">01</div><div class="step-body"><h4>Data Ingestion</h4><p>10,000 TMDB top-rated movies. Key columns: vote_average, vote_count, popularity, release_date, original_language, overview.</p><div class="step-tags"><span class="stag">pandas</span><span class="stag">CSV</span></div></div></div>
+        <div class="step"><div class="step-num">02</div><div class="step-body"><h4>Feature Engineering (9 features)</h4><p>Log-scale popularity & vote_count (fix skew). Compute movie_age, is_english. Encode language (top-5+other). Derive overview_length, word_count, pop×votes, age×votes.</p><div class="step-tags"><span class="stag">numpy</span><span class="stag">log1p</span><span class="stag">LabelEncoder</span><span class="stag">interaction terms</span></div></div></div>
+        <div class="step"><div class="step-num">03</div><div class="step-body"><h4>Target Binning</h4><p>vote_average → 3-class tier: <strong>Average</strong> (5.4–6.5), <strong>Good</strong> (6.5–7.5), <strong>Excellent</strong> (7.5+). Classification instead of regression.</p><div class="step-tags"><span class="stag">pd.cut</span><span class="stag">3-class</span></div></div></div>
+        <div class="step"><div class="step-num">04</div><div class="step-body"><h4>Train / Test Split & Scaling</h4><p>80/20 stratified split. StandardScaler fitted on train only (no data leakage). All 9 features normalised to μ=0, σ=1.</p><div class="step-tags"><span class="stag">train_test_split</span><span class="stag">StandardScaler</span><span class="stag">stratify</span></div></div></div>
+        <div class="step"><div class="step-num">05</div><div class="step-body"><h4>9 Baseline Models</h4><p>LR, DT, RF, Extra Trees, Gradient Boosting, AdaBoost, SVM (RBF), Naive Bayes, KNN — all evaluated on Accuracy, F1, Precision, Recall, MCC.</p><div class="step-tags"><span class="stag">scikit-learn</span><span class="stag">cross_val_score</span><span class="stag">StratifiedKFold</span></div></div></div>
+        <div class="step"><div class="step-num">06</div><div class="step-body"><h4>XGBoost & LightGBM</h4><p>State-of-the-art gradient-boosted trees. XGBoost uses mlogloss eval; LightGBM uses leaf-wise growth with early stopping on validation set.</p><div class="step-tags"><span class="stag">xgboost</span><span class="stag">lightgbm</span><span class="stag">early stopping</span></div></div></div>
+        <div class="step"><div class="step-num">07</div><div class="step-body"><h4>Hyperparameter Tuning — Optuna</h4><p>Bayesian optimisation with TPE sampler. Three independent studies (RF, XGBoost, LightGBM) — 12–20 trials each, maximising 3-fold CV accuracy. Improvements of ~1–2% over baseline.</p><div class="step-tags"><span class="stag">optuna</span><span class="stag">TPE</span><span class="stag">Bayesian</span></div></div></div>
+        <div class="step"><div class="step-num">08</div><div class="step-body"><h4>Soft Voting Ensemble</h4><p>RF Tuned + Gradient Boosting + SVM combined via soft voting — averages class probabilities for more robust, stable predictions.</p><div class="step-tags"><span class="stag">VotingClassifier</span><span class="stag">soft voting</span><span class="stag">probability avg</span></div></div></div>
+        <div class="step"><div class="step-num">09</div><div class="step-body"><h4>Pickle Persistence & Serving</h4><p>All 14 models + scaler + label encoder saved as .pkl files. Flask loads everything once at startup — sub-millisecond inference, zero retraining per request.</p><div class="step-tags"><span class="stag">pickle</span><span class="stag">Flask</span><span class="stag">REST API</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div class="panel">
+      <div class="ph"><div class="ph-icon" style="background:#14100a">🌐</div><div><div class="ph-title">API Reference</div></div></div>
+      <div class="pb">
+        <table class="api-table" style="width:100%;border-collapse:collapse">
+          <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><span style="color:var(--teal);font-family:monospace">GET</span></td><td style="font-family:monospace;color:var(--accent2)">/</td><td>Web Dashboard</td></tr>
+            <tr><td><span style="color:var(--accent);font-family:monospace">POST</span></td><td style="font-family:monospace;color:var(--accent2)">/api/predict</td><td>Single-model prediction</td></tr>
+            <tr><td><span style="color:var(--accent);font-family:monospace">POST</span></td><td style="font-family:monospace;color:var(--accent2)">/api/compare</td><td>All 14 models on same input</td></tr>
+            <tr><td><span style="color:var(--teal);font-family:monospace">GET</span></td><td style="font-family:monospace;color:var(--accent2)">/api/models</td><td>Full metrics JSON</td></tr>
+            <tr><td><span style="color:var(--teal);font-family:monospace">GET</span></td><td style="font-family:monospace;color:var(--accent2)">/api/viz/&lt;n&gt;</td><td>Serve viz PNG</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px;background:var(--s3);border-radius:var(--r8);padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mid);border:1px solid var(--border)">
+          POST /api/predict<br/>
+          {<br/>
+          &nbsp;&nbsp;"model": "RF (Tuned)",<br/>
+          &nbsp;&nbsp;"popularity": 25,<br/>
+          &nbsp;&nbsp;"vote_count": 12000,<br/>
+          &nbsp;&nbsp;"release_year": 2015,<br/>
+          &nbsp;&nbsp;"language_encoded": 0,<br/>
+          &nbsp;&nbsp;"is_english": 1,<br/>
+          &nbsp;&nbsp;"overview_length": 300,<br/>
+          &nbsp;&nbsp;"word_count": 55<br/>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><div class="ph-icon" style="background:#0a1210">💾</div>
+        <div><div class="ph-title">Persisted Artifacts</div><div class="ph-sub">All saved in /models/</div></div></div>
+      <div class="pb" style="display:flex;flex-wrap:wrap;gap:8px" id="file-tags"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- VIZ MODAL -->
+<div class="modal-bg" id="viz-modal" onclick="if(event.target===this)closeVizModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeVizModal()">✕</button>
+    <div class="modal-title" id="modal-title"></div>
+    <img class="modal-img" id="modal-img" src="" alt=""/>
+  </div>
+</div>
+
+<script>
+const RESULTS = {{ results | tojson }};
+const CLR = {Average:'#5b8dd9', Good:'#56cfb2', Excellent:'#ff5e2c'};
+
+// ── Init ──────────────────────────────────────────────────────────
+(function(){
+  const best = [...RESULTS].sort((a,b)=>b.Accuracy-a.Accuracy)[0];
+  if(best) document.getElementById('best-acc').textContent = (best.Accuracy*100).toFixed(1)+'%';
+  buildLeaderboard();
+  buildVizGallery();
+  buildFileTags();
+})();
+
+// ── Nav ───────────────────────────────────────────────────────────
+function gotoPage(id, tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(tab) tab.classList.add('active');
+}
+
+function sv(id, val){ document.getElementById(id).textContent = val; }
+
+// ── Inputs ────────────────────────────────────────────────────────
+function getInputs(){
+  return {
+    popularity:       parseFloat(document.getElementById('sl_pop').value),
+    vote_count:       parseFloat(document.getElementById('sl_vc').value),
+    release_year:     parseFloat(document.getElementById('sl_yr').value),
+    overview_length:  parseFloat(document.getElementById('sl_ov').value),
+    word_count:       parseFloat(document.getElementById('sl_wc').value),
+    language_encoded: parseInt(document.getElementById('lang_enc').value),
+    is_english:       parseInt(document.getElementById('is_en').value),
+    model:            document.getElementById('model-sel').value,
+  };
+}
+
+// ── Predict ───────────────────────────────────────────────────────
+async function runPredict(){
+  const btn=document.getElementById('btn-pred'), sp=document.getElementById('sp-pred');
+  btn.disabled=true; sp.style.display='block';
+  try{
+    const r = await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(getInputs())});
+    const d = await r.json();
+    if(d.error){ alert('Error: '+d.error); return; }
+    showResult(d);
+  }catch(e){ alert('Request failed: '+e); }
+  finally{ btn.disabled=false; sp.style.display='none'; }
+}
+
+function showResult(d){
+  document.getElementById('empty-result').style.display='none';
+  const rp = document.getElementById('result-panel');
+  rp.style.display='block'; rp.classList.remove('result-wrap'); rp.style.display='block';
+
+  const c = CLR[d.prediction]||'#aaa';
+  const hero = document.getElementById('pred-hero');
+  hero.style.setProperty('--pc', c);
+
+  document.getElementById('pred-tier').textContent = d.prediction;
+  document.getElementById('pred-tier').style.color = c;
+  document.getElementById('pred-model-lbl').textContent = d.model;
+  document.getElementById('res-model-sub').textContent  = d.model;
+  document.getElementById('pred-conf-val').textContent  = (d.confidence*100).toFixed(1)+'%';
+  document.getElementById('pred-conf-val').style.color  = c;
+
+  const pct = d.confidence*100;
+  let cbcls='cb-high', cblbl='High Confidence';
+  if(pct<60){cbcls='cb-low';cblbl='Low Confidence';}
+  else if(pct<75){cbcls='cb-mid';cblbl='Medium Confidence';}
+  document.getElementById('pred-conf-badge').innerHTML=`<span class="conf-badge ${cbcls}">● ${cblbl} ${pct.toFixed(1)}%</span>`;
+
+  const probs = d.probabilities||{};
+  document.getElementById('prob-bars').innerHTML = ['Average','Good','Excellent'].map(cls=>{
+    const v=(probs[cls]||0)*100;
+    return `<div class="pb-row"><div class="pb-lbl">${cls}</div><div class="pb-track"><div class="pb-fill ${cls}" style="width:${v.toFixed(1)}%"></div></div><div class="pb-pct">${v.toFixed(1)}%</div></div>`;
+  }).join('');
+
+  const row = RESULTS.find(x=>x.Model===d.model)||{};
+  document.getElementById('res-stats').innerHTML = ['Accuracy','F1','Precision','Recall']
+    .filter(k=>row[k]>0)
+    .map(k=>`<div class="res-stat"><div class="rs-val">${(row[k]*100).toFixed(1)}%</div><div class="rs-lbl">${k}</div></div>`)
+    .join('');
+}
+
+// ── Compare ───────────────────────────────────────────────────────
+async function runCompare(){
+  const sp=document.getElementById('sp-compare');
+  sp.style.display='block';
+  document.getElementById('cmp-empty').style.display='none';
+  document.getElementById('cmp-result').style.display='none';
+  const inp={...getInputs()}; delete inp.model;
+  try{
+    const r    = await fetch('/api/compare',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(inp)});
+    const rows = await r.json();
+    const tbody = document.getElementById('cmp-tbody'); tbody.innerHTML='';
+    rows.forEach((row,i)=>{
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+      const pct   = (row.confidence*100).toFixed(1);
+      tbody.innerHTML+=`<tr>
+        <td><span class="rank-cell ${i===0?'rank-gold':''}">${medal}</span></td>
+        <td><strong>${row.model}</strong></td>
+        <td><span class="type-badge t-${row.type}">${row.type}</span></td>
+        <td><span class="pred-sm p-${row.prediction}">${row.prediction}</span></td>
+        <td><span class="conf-bar"><span class="conf-bar-fill" style="width:${pct}%"></span></span><span class="mono">${pct}%</span></td>
+        <td class="mono">${(row.accuracy*100).toFixed(2)}%</td>
+        <td class="mono">${row.f1_score.toFixed(4)}</td>
+        <td class="mono">${(row.mcc||0).toFixed(3)}</td>
+      </tr>`;
+    });
+    document.getElementById('cmp-result').style.display='block';
+  }catch(e){ alert('Error: '+e); }
+  finally{ sp.style.display='none'; }
+}
+
+// ── Leaderboard ───────────────────────────────────────────────────
+function buildLeaderboard(){
+  const sorted = [...RESULTS].sort((a,b)=>b.Accuracy-a.Accuracy);
+  const TYPE_C = {Baseline:'var(--blue)',Boosting:'var(--accent)',Tuned:'var(--accent2)',Ensemble:'var(--teal)'};
+  document.getElementById('ldr-grid').innerHTML = sorted.map((r,i)=>{
+    const rk = i+1;
+    const medal = rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':'#'+rk;
+    const topCls = rk<=3?'ldr-'+rk:'ldr-n';
+    return `<div class="ldr-card ${topCls}">
+      <div class="ldr-rank ${rk===1?'ldr-rank-gold':''}">${medal}</div>
+      <div class="ldr-name">${r.Model}</div>
+      <div class="ldr-acc">${(r.Accuracy*100).toFixed(1)}%</div>
+      <div class="ldr-label">Test Accuracy</div>
+      <div class="ldr-pills">
+        <span class="ldr-pill">F1 ${r.F1.toFixed(3)}</span>
+        ${r.Precision>0?`<span class="ldr-pill">Prec ${r.Precision.toFixed(3)}</span>`:''}
+        ${r.MCC?`<span class="ldr-pill">MCC ${r.MCC.toFixed(3)}</span>`:''}
+        <span class="ldr-pill" style="color:${TYPE_C[r.Type]||'var(--mid)'}">${r.Type}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Viz gallery ───────────────────────────────────────────────────
+const VIZ_LIST = [
+  {id:'01_distributions',       title:'Dataset Distributions',         desc:'Vote avg, log-vote count, log-popularity, languages, release years & overview lengths'},
+  {id:'02_correlation',         title:'Feature Correlation Heatmap',   desc:'Pearson correlation matrix for all numeric features'},
+  {id:'03_target',              title:'Target Variable Analysis',      desc:'Class distribution pie, bar counts & boxplot of vote_average per tier'},
+  {id:'04_scaling',             title:'Feature Scaling',               desc:'Mean ± std before & after StandardScaler for all 9 features'},
+  {id:'05_feature_relationships',title:'Feature Relationships',        desc:'Scatter & density plots coloured by rating tier'},
+  {id:'06_comparison',          title:'Model Comparison Master',       desc:'Accuracy ranking bar + Accuracy vs F1 scatter + top-5 radar chart'},
+  {id:'07_confusion',           title:'Confusion Matrices',            desc:'Normalised confusion matrices for top 6 models with counts & percentages'},
+  {id:'08_importance',          title:'Feature Importance',            desc:'Gini importances for RF Tuned, Gradient Boosting & XGBoost Tuned'},
+  {id:'09_learning',            title:'Learning Curves',               desc:'Train vs CV accuracy by training size — bias/variance analysis'},
+  {id:'10_roc',                 title:'ROC Curves (OvR)',              desc:'One-vs-Rest ROC + AUC per class for top 3 models'},
+  {id:'11_optuna',              title:'Optuna Best Hyperparameters',   desc:'Final tuned hyperparameter values from Bayesian optimisation'},
+  {id:'12_per_class',           title:'Per-Class Metrics',             desc:'Precision, Recall & F1 per class for RF Tuned, XGB Tuned & Ensemble'},
+  {id:'13_leaderboard',         title:'Final Leaderboard Chart',       desc:'All 14 models ranked by test accuracy with F1 & MCC annotations'},
+];
+function buildVizGallery(){
+  document.getElementById('viz-grid').innerHTML = VIZ_LIST.map(v=>`
+    <div class="viz-card" onclick="openViz('/api/viz/${v.id}','${v.title}')">
+      <img class="viz-thumb" src="/api/viz/${v.id}" alt="${v.title}" loading="lazy"
+           onerror="this.style.background='var(--s3)'"/>
+      <div class="viz-info"><div class="viz-title">${v.title}</div><div class="viz-desc">${v.desc}</div></div>
+    </div>`).join('');
+}
+function openViz(src,title){
+  document.getElementById('modal-img').src=src;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('viz-modal').classList.add('open');
+}
+function closeVizModal(){ document.getElementById('viz-modal').classList.remove('open'); }
+
+// ── File tags ─────────────────────────────────────────────────────
+function buildFileTags(){
+  const files=['scaler.pkl','feature_names.pkl','label_encoder.pkl','tuned_rf.pkl','tuned_xgboost.pkl',
+    'ensemble.pkl','xgboost.pkl','lightgbm.pkl','baseline_random_forest.pkl',
+    'baseline_gradient_boosting.pkl','baseline_svm_rbf.pkl','optuna_results.json','final_results.json'];
+  document.getElementById('file-tags').innerHTML = files.map(f=>
+    `<span class="tag-chip">📦 ${f}</span>`).join('');
+}
+</script>
+</body>
+</html>

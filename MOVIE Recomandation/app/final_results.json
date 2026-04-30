@@ -1,0 +1,107 @@
+[
+  {
+    "Model": "LGB (Tuned)",
+    "Type": "Tuned",
+    "Accuracy": 0.6075,
+    "F1": 0.6019,
+    "MCC": 0.3241
+  },
+  {
+    "Model": "LightGBM",
+    "Type": "Boosting",
+    "Accuracy": 0.607,
+    "F1": 0.6023,
+    "MCC": 0.3242
+  },
+  {
+    "Model": "Voting Ensemble",
+    "Type": "Ensemble",
+    "Accuracy": 0.6005,
+    "F1": 0.5949,
+    "MCC": 0.3106
+  },
+  {
+    "Model": "XGBoost (Tuned)",
+    "Type": "Tuned",
+    "Accuracy": 0.6,
+    "F1": 0.5956,
+    "MCC": 0.3145
+  },
+  {
+    "Model": "RF (Tuned)",
+    "Type": "Tuned",
+    "Accuracy": 0.5995,
+    "F1": 0.5945,
+    "MCC": 0.3119
+  },
+  {
+    "Model": "Gradient Boosting",
+    "Type": "Baseline",
+    "Accuracy": 0.5955,
+    "F1": 0.5905,
+    "MCC": 0.3069
+  },
+  {
+    "Model": "XGBoost",
+    "Type": "Boosting",
+    "Accuracy": 0.5935,
+    "F1": 0.5892,
+    "MCC": 0.3048
+  },
+  {
+    "Model": "SVM (RBF)",
+    "Type": "Baseline",
+    "Accuracy": 0.586,
+    "F1": 0.578,
+    "MCC": 0.2836
+  },
+  {
+    "Model": "Decision Tree",
+    "Type": "Baseline",
+    "Accuracy": 0.5735,
+    "F1": 0.5624,
+    "MCC": 0.2883
+  },
+  {
+    "Model": "Random Forest",
+    "Type": "Baseline",
+    "Accuracy": 0.571,
+    "F1": 0.5685,
+    "MCC": 0.2689
+  },
+  {
+    "Model": "Naive Bayes",
+    "Type": "Baseline",
+    "Accuracy": 0.568,
+    "F1": 0.5624,
+    "MCC": 0.2948
+  },
+  {
+    "Model": "Logistic Regression",
+    "Type": "Baseline",
+    "Accuracy": 0.5655,
+    "F1": 0.5546,
+    "MCC": 0.2418
+  },
+  {
+    "Model": "AdaBoost",
+    "Type": "Baseline",
+    "Accuracy": 0.558,
+    "F1": 0.5357,
+    "MCC": 0.232
+  },
+  {
+    "Model": "Extra Trees",
+    "Type": "Baseline",
+    "Accuracy": 0.5565,
+    "F1": 0.5547,
+    "MCC": 0.2468
+  },
+  {
+    "Model": "KNN",
+    "Type": "Baseline",
+    "Accuracy": 0.553,
+    "F1": 0.549,
+    "MCC": 0.2387
+  }
+]
