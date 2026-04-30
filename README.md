@@ -1,6 +1,23 @@
 # MultiModel-Movie-Rating-Predictor
 # 🎬 CinePredict: Advanced Movie Intelligence Platform
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a68ba7c6-4954-4eed-86b2-5e5cb1f7e668" 
+       alt="CinePredict Dashboard" 
+       width="90%" 
+       style="border-radius:10px;"/>
+</p>
+
+<td>
+  <img 
+    src="https://github.com/user-attachments/assets/ff750047-6d1c-41d9-a307-5e0467eac11f" 
+    alt="Model Comparison View" 
+    width="100%" 
+    style="border-radius:8px;"
+  />
+</td>
+
+
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.0+-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
@@ -157,12 +174,18 @@ A technical walkthrough of the 9-step ML process, providing full transparency in
 
 ## 📸 Screenshots / Demo
 
-> **Tip for Developer:** Add your images here to make your README pop!
-
-| Dashboard Home | Prediction Result | Model Comparison |
-| :--- | :--- | :--- |
-| ![Main UI](https://via.placeholder.com/300x200?text=Main+Dashboard+UI) | ![Prediction](https://via.placeholder.com/300x200?text=Prediction+Hero+Result) | ![Compare](https://via.placeholder.com/300x200?text=All+Models+Comparison+Table) |
-
+<table>
+  <tr>
+    <th>Dashboard Home</th>
+    <th>Prediction Result</th>
+    <th>Model Comparison</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/a68ba7c6-4954-4eed-86b2-5e5cb1f7e668" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/7e90b66c-ce58-4d4e-b461-fd30765e276f" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/ff750047-6d1c-41d9-a307-5e0467eac11f" width="100%"/></td>
+  </tr>
+</table>
 ---
 
 ## 🔌 API Documentation
