@@ -39,6 +39,32 @@ By incorporating feature engineering techniques—such as logarithmic scaling of
 
 ---
 
+
+
+## 🧩 Model Artifacts & Code
+
+<table>
+  <tr>
+    <th>Serialized Models (.pkl)</th>
+    <th>Pipeline / Code Snippet</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/1ed65949-626f-4b00-a1c7-4c52c3ed18cc" 
+           alt="Pickle Model Files" 
+           width="90%" 
+           style="border-radius:8px;"/>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/15cd99c5-b07a-44c1-9d8a-ee93413105a3" 
+           alt="Code Snippet" 
+           height="300" 
+           style="border-radius:8px;"/>
+    </td>
+  </tr>
+</table>
+
+---
 ## ✨ Features
 
 ### 🧠 Advanced ML Pipeline
